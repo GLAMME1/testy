@@ -31,7 +31,6 @@ func TestChangeBalance_Sequential(t *testing.T) {
         t.Fatal(err)
     }
     id := uuid.New()
-    // Ensure zero balance
     if _, err := repo.ChangeBalance(ctx, id, OperationDeposit, 0); err != nil {
         t.Fatal(err)
     }
@@ -82,5 +81,6 @@ func TestChangeBalance_Concurrent(t *testing.T) {
         t.Fatalf("balance mismatch: got=%d want=%d", got, want)
     }
 }
+
 
 
