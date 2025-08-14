@@ -37,9 +37,9 @@ CREATE TABLE IF NOT EXISTS wallets (
     return err
 }
 
-// ChangeBalance applies deposit/withdraw atomically with serialization per wallet.
+
 func (r *Repository) ChangeBalance(ctx context.Context, walletID uuid.UUID, op OperationType, amount int64) (int64, error) {
-    // Преобразуем операцию в приращение баланса
+    // преобразуем операцию в приращение баланса
     var delta int64
     switch op {
     case OperationDeposit:
@@ -56,7 +56,7 @@ func (r *Repository) ChangeBalance(ctx context.Context, walletID uuid.UUID, op O
     }
     defer func() { _ = tx.Rollback(ctx) }()
 
-    // Последовательный доступ к одному кошельку через advisory lock
+    // последовательный доступ к одному кошельку через advisory lock
     var k1, k2 int32
     b := walletID
     k1 = int32(binary.BigEndian.Uint32(b[0:4]))
@@ -65,12 +65,12 @@ func (r *Repository) ChangeBalance(ctx context.Context, walletID uuid.UUID, op O
         return 0, err
     }
 
-    // Обеспечиваем наличие записи
+    // обеспечиваем наличие записи
     if _, err = tx.Exec(ctx, `INSERT INTO wallets (id, balance) VALUES ($1, 0) ON CONFLICT (id) DO NOTHING`, walletID); err != nil {
         return 0, err
     }
 
-    // Атомарное обновление с проверкой на отрицательный баланс
+    // атомарное обновление с проверкой на отрицательный баланс
     var newBalance int64
     err = tx.QueryRow(ctx, `
         UPDATE wallets
@@ -102,5 +102,6 @@ func (r *Repository) GetBalance(ctx context.Context, walletID uuid.UUID) (int64,
     }
     return balance, nil
 }
+
 
 
