@@ -15,7 +15,7 @@ import (
 )
 
 func TestHandleChange_Valid(t *testing.T) {
-    // Minimal fake via closure-backed implementation
+    
     type fake struct{}
     var _ WalletService = (*fake)(nil)
     func (fake) ChangeBalance(_ context.Context, _ uuid.UUID, _ store.OperationType, _ int64) (int64, error) { return 10, nil }
@@ -37,5 +37,6 @@ func TestHandleChange_Valid(t *testing.T) {
         t.Fatalf("unexpected status: %d", w.Code)
     }
 }
+
 
 
