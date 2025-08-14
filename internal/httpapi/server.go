@@ -35,7 +35,7 @@ type balanceResponse struct {
     Balance  int64     `json:"balance"`
 }
 
-// MountRoutes регистрирует маршруты API на роутере.
+//  регистрирует маршруты API на роутере.
 func (s *Server) MountRoutes(r chi.Router) {
     r.Route("/api/v1", func(r chi.Router) {
         r.Post("/wallet", s.handleChange)
@@ -88,5 +88,6 @@ func (s *Server) handleGet(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
     _ = json.NewEncoder(w).Encode(balanceResponse{WalletID: walletID, Balance: balance})
 }
+
 
 
