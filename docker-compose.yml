@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: wallet
+      POSTGRES_USER: wallet
+      POSTGRES_PASSWORD: wallet
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://wallet:wallet@db:5432/wallet?sslmode=disable
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  db_data: {}
+
+
